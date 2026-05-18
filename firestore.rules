@@ -1,0 +1,36 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Current Rule: Allowed for development purposes. Expires 2026-04-05.
+    match /{document=**} {
+      allow read, write: if request.time < timestamp.date(2026, 4, 5);
+    }
+    
+    // FUTURE PRODUCTION RULES (For deployment):
+    /*
+    // Allow anyone to read cars
+    match /cars/{carId} {
+      allow read: if true;
+      allow write: if request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Allow anyone to submit enquiries/sell requests, but only admins can read or delete
+    match /enquiries/{enquiryId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    match /sellRequests/{requestId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Admins collection is restricted
+    match /admins/{adminId} {
+      allow read: if request.auth != null && request.auth.uid == adminId;
+      allow write: if false; // Only manageable from Firebase Console / Admin SDK
+    }
+    */
+  }
+}
